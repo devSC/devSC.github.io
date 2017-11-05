@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Moya," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="最近新项目开始尝试 Swift 混编，而我负责搭建底层库。在调研了很多开源的网络库后，最后选择了 Moya，本片文章也是对 Moya 使用过程的一个总结。 Moya 是什么？Moya 是一个开源的网络请求库，它底层封装了Alamofire，对外提供简单易用的网络请求的接口。 为什么选择 Moya？大家都知道在 Swift 2.0版本发布的时候，官方当时在Protocol-Oriented Prog">
+<meta name="keywords" content="Moya">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于[Moya]-打造更现代化的网络请求库 .md">
+<meta property="og:url" content="http://yoursite.com/2017/11/06/modernize-networking-lib-based-Moya/index.html">
+<meta property="og:site_name" content="袁仕崇的博客">
+<meta property="og:description" content="最近新项目开始尝试 Swift 混编，而我负责搭建底层库。在调研了很多开源的网络库后，最后选择了 Moya，本片文章也是对 Moya 使用过程的一个总结。 Moya 是什么？Moya 是一个开源的网络请求库，它底层封装了Alamofire，对外提供简单易用的网络请求的接口。 为什么选择 Moya？大家都知道在 Swift 2.0版本发布的时候，官方当时在Protocol-Oriented Prog">
+<meta property="og:updated_time" content="2017-11-05T22:58:34.926Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于[Moya]-打造更现代化的网络请求库 .md">
+<meta name="twitter:description" content="最近新项目开始尝试 Swift 混编，而我负责搭建底层库。在调研了很多开源的网络库后，最后选择了 Moya，本片文章也是对 Moya 使用过程的一个总结。 Moya 是什么？Moya 是一个开源的网络请求库，它底层封装了Alamofire，对外提供简单易用的网络请求的接口。 为什么选择 Moya？大家都知道在 Swift 2.0版本发布的时候，官方当时在Protocol-Oriented Prog">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/06/modernize-networking-lib-based-Moya/"/>
+
+
+
+
+
+  <title>基于[Moya]-打造更现代化的网络请求库 .md | 袁仕崇的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">袁仕崇的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/06/modernize-networking-lib-based-Moya/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="袁仕崇的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于[Moya]-打造更现代化的网络请求库 .md</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-06T06:52:22+08:00">
+                2017-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近新项目开始尝试 Swift 混编，而我负责搭建底层库。在调研了很多开源的网络库后，最后选择了 Moya，本片文章也是对 Moya 使用过程的一个总结。</p>
+<h1 id="Moya-是什么？"><a href="#Moya-是什么？" class="headerlink" title="Moya 是什么？"></a>Moya 是什么？</h1><p><a href="https://github.com/Moya/Moya" target="_blank" rel="external">Moya</a> 是一个开源的网络请求库，它底层封装了<code>Alamofire</code>，对外提供简单易用的网络请求的接口。</p>
+<h1 id="为什么选择-Moya？"><a href="#为什么选择-Moya？" class="headerlink" title="为什么选择 Moya？"></a>为什么选择 Moya？</h1><p>大家都知道在 Swift 2.0版本发布的时候，官方当时在<a href="https://developer.apple.com/videos/play/wwdc2015/408/" target="_blank" rel="external">Protocol-Oriented Programming in Swift</a> 中就向广大小伙伴们推荐在 Swift 中使用面向 POP 编程。而让我选择 Moya 的最大原因也是其：<strong>面向 POP 编程</strong>。至于 POP、OOP 编程的优缺点可以看喵大的<a href="https://onevcat.com/2016/11/pop-cocoa-1/" target="_blank" rel="external">这篇文章</a>和<a href="https://onevcat.com/2016/12/pop-cocoa-2//" target="_blank" rel="external">这篇文章</a>，文章里已经分析的很清晰了，我在此简述一下。</p>
+<h3 id="面向-POP-解决了面向-OOP-编程的那些问题？"><a href="#面向-POP-解决了面向-OOP-编程的那些问题？" class="headerlink" title="面向 POP 解决了面向 OOP 编程的那些问题？"></a>面向 POP 解决了面向 OOP 编程的那些问题？</h3><ul>
+<li>横切关注点</li>
+<li>多继承的菱形依赖</li>
+<li>动态派发安全性</li>
+</ul>
+<h1 id="如何使用-Moya-？"><a href="#如何使用-Moya-？" class="headerlink" title="如何使用 Moya ？"></a>如何使用 Moya ？</h1><ul>
+<li>定义实现<code>TargetType</code>的接口类</li>
+<li>定义 ApiManager 类</li>
+<li>调用</li>
+</ul>
+<h3 id="定义接口"><a href="#定义接口" class="headerlink" title="定义接口"></a>定义接口</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">Game</span> </span>&#123;</div><div class="line">    <span class="comment">//1.</span></div><div class="line">    <span class="keyword">case</span> login(<span class="type">String</span>, <span class="type">String</span>)</div><div class="line">    <span class="keyword">case</span> userProfile</div><div class="line">    <span class="keyword">case</span> sticker</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//2.</span></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">Game</span>: <span class="title">TargetType</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">//3.</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> baseURL: <span class="type">URL</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">URL</span>(string: <span class="string">"<span class="subst">\(HttpScheme)</span>://<span class="subst">\(HttpHost)</span>/v1<span class="subst">\(ApiPrefix)</span>"</span>)!</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//4.</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> path: <span class="type">String</span> &#123;</div><div class="line">        <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</div><div class="line">        <span class="keyword">case</span> .login:</div><div class="line">            <span class="keyword">return</span> <span class="string">"/signin"</span></div><div class="line">        <span class="keyword">case</span> .sticker:</div><div class="line">            <span class="keyword">return</span> <span class="string">"/sticker"</span></div><div class="line">        <span class="keyword">default</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">"/"</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//5.</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> method: <span class="type">Moya</span>.<span class="type">Method</span> &#123;</div><div class="line">        <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</div><div class="line">        <span class="keyword">case</span> .login:</div><div class="line">            <span class="keyword">return</span> .post</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">            <span class="keyword">return</span> .<span class="keyword">get</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//6.</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> task: <span class="type">Task</span> &#123;</div><div class="line">        <span class="keyword">switch</span> <span class="keyword">self</span> &#123;</div><div class="line">        <span class="keyword">case</span> .login(<span class="keyword">let</span> username, <span class="keyword">let</span> password):</div><div class="line">            <span class="keyword">return</span> .requestParameters(parameters: [<span class="string">"username"</span> : username, <span class="string">"password"</span> : password], encoding: <span class="type">GameURLEncoding</span>.<span class="keyword">default</span>)</div><div class="line">        <span class="keyword">case</span> .sticker:</div><div class="line">            <span class="keyword">return</span> .requestParameters(parameters: [:], encoding: <span class="type">GameURLEncoding</span>.<span class="keyword">default</span>)</div><div class="line">        <span class="keyword">default</span>:</div><div class="line">            <span class="keyword">return</span> .requestParameters(parameters: [:], encoding: <span class="type">GameURLEncoding</span>.<span class="keyword">default</span>)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//7.</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> validate: <span class="type">Bool</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//8.</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> sampleData: <span class="type">Data</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Hello world"</span>.data(using: <span class="type">String</span>.<span class="type">Encoding</span>.utf8)!</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">//9</span></div><div class="line">    <span class="keyword">public</span> <span class="keyword">var</span> headers: [<span class="type">String</span> : <span class="type">String</span>]? &#123;</div><div class="line">        <span class="keyword">return</span> []</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1：定义 api 枚举接口。</p>
+<p>2：实现 Moya 的 <code>TargetType</code> 协议。</p>
+<p>3：定义接口接口 Domain。</p>
+<p>4：返回定义的接口所对应的路径 path。</p>
+<p>5：定义该接口使用的请求方法类型。</p>
+<p>6：添加接口所需要的额外参数，并处理其参数的对应编码方式。</p>
+<p>7：这里可以针对特定路径来实现特定的接口验证方式。</p>
+<p>8：这里可以针对接口返回特定的测试数据。</p>
+<p>9：可以添加自定义的请求头参数。</p>
+<h3 id="定义-ApiManager"><a href="#定义-ApiManager" class="headerlink" title="定义 ApiManager"></a>定义 <code>ApiManager</code></h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameAPIManager</span> </span>&#123;    </div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">let</span> `<span class="keyword">default</span>` = <span class="type">GameAPIManager</span>()</div><div class="line"></div><div class="line">    <span class="comment">//1.</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">let</span> gameApiProvider = <span class="type">MoyaProvider</span>&lt;<span class="type">Game</span>&gt;</div><div class="line">    </div><div class="line">    <span class="comment">//2.</span></div><div class="line">    @discardableResult</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">request</span><span class="params">(</span></span></div><div class="line"><span class="function"><span class="params">        <span class="number">_</span> target: Game,</span></span></div><div class="line"><span class="function"><span class="params">        callbackQueue: DispatchQueue? = <span class="literal">nil</span>,</span></span></div><div class="line"><span class="function"><span class="params">        progress: Moya.ProgressBlock? = <span class="literal">nil</span>,</span></span></div><div class="line"><span class="function"><span class="params">        success: @escaping <span class="params">(Response)</span></span></span> -&gt; <span class="type">Void</span>,</div><div class="line">        failure: @escaping (<span class="type">Error</span>) -&gt; <span class="type">Void</span>) -&gt; <span class="type">Cancellable</span> &#123;</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> <span class="type">GameAPIManager</span>.<span class="keyword">default</span>.gameApiProvider.request(</div><div class="line">            target,</div><div class="line">            callbackQueue: callbackQueue,</div><div class="line">            progress: progress,</div><div class="line">            completion: &#123; (result) <span class="keyword">in</span></div><div class="line">                <span class="keyword">switch</span> result &#123;</div><div class="line">                <span class="keyword">case</span> .success(<span class="keyword">let</span> response):</div><div class="line">                    success(response)</div><div class="line">                <span class="keyword">case</span> .failure(<span class="keyword">let</span> error):</div><div class="line">                    failure(error)</div><div class="line">                &#125;      </div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1：定义 <code>MoyaProvider</code></p>
+<p>2：定义请求方法.</p>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="type">GameAPIManager</span>.request(.sticker, success: &#123; (response) <span class="keyword">in</span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"response: <span class="subst">\(response)</span>"</span>)</div><div class="line">&#125;) &#123; (error) <span class="keyword">in</span></div><div class="line">    <span class="built_in">print</span>(<span class="string">"error: <span class="subst">\(error)</span>"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>没错，使用 Moya 来搭建自己的网络请求库就是这么简单。</p>
+<p>下面我们来根据自己需求来定制一下 <code>ApiManager</code>。</p>
+<p>###向接口的中添加全局参数</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">//1.</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RequestHandlingPlugin</span>: <span class="title">PluginType</span> </span>&#123;    </div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">func</span> <span class="title">prepare</span><span class="params">(<span class="number">_</span> request: URLRequest, target: TargetType)</span></span> -&gt; <span class="type">URLRequest</span> &#123;</div><div class="line">        <span class="keyword">var</span> mutateableRequest = request</div><div class="line">        <span class="comment">//2.</span></div><div class="line">        <span class="keyword">return</span> mutateableRequest.appendCommonParams();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">extension</span> <span class="title">URLRequest</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="comment">/// global common params</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">var</span> commonParams: [<span class="type">String</span>: <span class="type">Any</span>] &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">Enviroment</span>.requestParams</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/// global common header fields</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">var</span> commonHeaderFields: [<span class="type">String</span> : <span class="type">String</span>] &#123;</div><div class="line">        <span class="keyword">return</span> <span class="type">LoginManager</span>.authorizeParams</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">mutating</span> <span class="function"><span class="keyword">func</span> <span class="title">appendCommonParams</span><span class="params">()</span></span> -&gt; <span class="type">URLRequest</span> &#123;</div><div class="line">        <span class="keyword">let</span> newHeaderFields = (allHTTPHeaderFields ?? [:]).merging(commonHeaderFields) &#123; (current, <span class="number">_</span>) <span class="keyword">in</span> current &#125;</div><div class="line">        allHTTPHeaderFields = newHeaderFields</div><div class="line">        <span class="keyword">let</span> request = <span class="keyword">try</span>? encoded(parameters: commonParams, parameterEncoding: <span class="type">URLEncoding</span>(destination: .queryString))</div><div class="line">        <span class="built_in">assert</span>(request != <span class="literal">nil</span>, <span class="string">"append common params failed, please check common params value"</span>)</div><div class="line">        <span class="keyword">return</span> request!</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">func</span> <span class="title">encoded</span><span class="params">(parameters: [String: Any], parameterEncoding: ParameterEncoding)</span></span> <span class="keyword">throws</span> -&gt; <span class="type">URLRequest</span> &#123;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">try</span> parameterEncoding.encode(<span class="keyword">self</span>, with: parameters)</div><div class="line">        &#125; <span class="keyword">catch</span> &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="type">MoyaError</span>.parameterEncoding(error)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1：定义<code>RequestHandlingPlugin</code>类并遵守 <code>PluginType</code>协议。</p>
+<p>2：向最终的请求中添加额外参数。</p>
+<h3 id="验证-SSL-自签名证书"><a href="#验证-SSL-自签名证书" class="headerlink" title="验证 SSL 自签名证书"></a>验证 SSL 自签名证书</h3><p>由于 Moya 底层封装的是 Alamofire, 所以验证自签名证书这里要用到 Alamofire 库。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GameAPIManager</span> </span>&#123;</div><div class="line">    ...</div><div class="line">    <span class="keyword">private</span> <span class="keyword">let</span> gameApiProvider: <span class="type">MoyaProvider</span>&lt;<span class="type">Game</span>&gt;</div><div class="line"></div><div class="line">    <span class="comment">//1.</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">let</span> manager: <span class="type">SessionManager</span></div><div class="line">    </div><div class="line">    <span class="comment">//2.</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">let</span> serverTrustPolicy = <span class="type">ServerTrustPolicy</span>.pinCertificates(</div><div class="line">        certificates: <span class="type">ServerTrustPolicy</span>.certificates(),</div><div class="line">        <span class="comment">//如果为自签名证书，这里得让 Alamofire 去验证证书，所以值为 True</span></div><div class="line">        validateCertificateChain: <span class="literal">true</span>,</div><div class="line">        validateHost: <span class="literal">false</span></div><div class="line">    )</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">let</span> pkcs12Import = <span class="type">PKCS12Import</span>(</div><div class="line">        mainBundleResource: <span class="string">"client"</span>,</div><div class="line">        resourceType: <span class="string">"p12"</span>,</div><div class="line">        password: <span class="string">"******"</span></div><div class="line">    )</div><div class="line">    </div><div class="line">    <span class="keyword">init</span>() &#123;</div><div class="line">        <span class="keyword">let</span> serverTrustPolicies = [<span class="string">"<span class="subst">\(HttpHost)</span>"</span> : serverTrustPolicy]</div><div class="line">        </div><div class="line">        <span class="comment">//3.</span></div><div class="line">        <span class="keyword">let</span> serverTrustPolicyManager = <span class="type">ServerTrustPolicyManager</span>(policies: serverTrustPolicies)</div><div class="line">        </div><div class="line">        <span class="comment">//4.</span></div><div class="line">        manager = <span class="type">SessionManager</span>(</div><div class="line">            configuration: <span class="type">URLSessionConfiguration</span>.<span class="keyword">default</span>,</div><div class="line">            delegate: <span class="type">SessionDelegate</span>(),</div><div class="line">            serverTrustPolicyManager: serverTrustPolicyManager</div><div class="line">        )</div><div class="line">        </div><div class="line">        <span class="comment">//5.</span></div><div class="line">        gameApiProvider = <span class="type">MoyaProvider</span>&lt;<span class="type">Game</span>&gt;(</div><div class="line">            manager: manager,</div><div class="line">        )</div><div class="line">        </div><div class="line">        <span class="comment">//6.</span></div><div class="line">        manager.delegate.sessionDidReceiveChallengeWithCompletion = &#123; [<span class="keyword">weak</span> <span class="keyword">self</span>] (session, challenge, completion) <span class="keyword">in</span></div><div class="line">            <span class="keyword">guard</span> <span class="keyword">let</span> `<span class="keyword">self</span>` = <span class="keyword">self</span> <span class="keyword">else</span> &#123;</div><div class="line">                completion(.performDefaultHandling, <span class="literal">nil</span>)</div><div class="line">                <span class="keyword">return</span></div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> challenge.protectionSpace.authenticationMethod == <span class="type">NSURLAuthenticationMethodServerTrust</span> &#123;</div><div class="line">                <span class="keyword">guard</span></div><div class="line">                    <span class="keyword">let</span> serverTrust = challenge.protectionSpace.serverTrust,</div><div class="line">                    <span class="keyword">self</span>.serverTrustPolicy.evaluate(serverTrust, forHost: challenge.protectionSpace.host) <span class="keyword">else</span> &#123;</div><div class="line">                        completion(.performDefaultHandling, <span class="literal">nil</span>)</div><div class="line">                        <span class="keyword">return</span></div><div class="line">                &#125;</div><div class="line">                completion(.useCredential, <span class="type">URLCredential</span>(trust: serverTrust))</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> challenge.protectionSpace.authenticationMethod == <span class="type">NSURLAuthenticationMethodClientCertificate</span> &#123;</div><div class="line">                <span class="keyword">guard</span> <span class="keyword">let</span> pkcs12Import = <span class="keyword">self</span>.pkcs12Import <span class="keyword">else</span> &#123;</div><div class="line">                    completion(.performDefaultHandling, <span class="literal">nil</span>)</div><div class="line">                    <span class="keyword">return</span></div><div class="line">                    </div><div class="line">                &#125;</div><div class="line">                completion(.useCredential, pkcs12Import.urlCredential)</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                completion(.performDefaultHandling, <span class="literal">nil</span>)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>1：定义一个类型为 Alamofire <code>SesssionManager</code>的属性 <code>manager</code>。</p>
+<p>2：定义自己的 <code>ServerTrustPolicy</code> 属性。 </p>
+<p>3：指定域名的验证策略为使用特定证书。</p>
+<p>4：初始化 <code>Manager</code> 并指定其 <code>Delegate</code>。</p>
+<p>5：初始化 <code>gameApiProvider</code>.</p>
+<p>6: 自定义实现Alamofire 的证书验证代理方法。</p>
+<p>上面代码中，<code>PKCS12Import</code>是抽象出的一个管理客户端 p12 证书文件并返回 <code>URLCredential</code> 的小工具类可以在 <a href="https://github.com/devSC/Moya-demo" target="_blank" rel="external">Demo</a> 中查看其源码。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Moya 的使用就是这么简单，就像其文档中第一句话中写的：<em>Moya is about working at high levels of abstraction in your application.</em> 是的，它尽可能的对底层进行了封装，但又不失我们对底层操作的灵活性，完美发挥了 POP 的威力。</p>
+<p>可以在<a href="https://github.com/devSC/Moya-demo" target="_blank" rel="external">这里</a>查看示例代码。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Moya/" rel="tag"># Moya</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/05/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description">Test Blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Moya-是什么？"><span class="nav-number">1.</span> <span class="nav-text">Moya 是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么选择-Moya？"><span class="nav-number">2.</span> <span class="nav-text">为什么选择 Moya？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#面向-POP-解决了面向-OOP-编程的那些问题？"><span class="nav-number">2.0.1.</span> <span class="nav-text">面向 POP 解决了面向 OOP 编程的那些问题？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使用-Moya-？"><span class="nav-number">3.</span> <span class="nav-text">如何使用 Moya ？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义接口"><span class="nav-number">3.0.1.</span> <span class="nav-text">定义接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#定义-ApiManager"><span class="nav-number">3.0.2.</span> <span class="nav-text">定义 ApiManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调用"><span class="nav-number">3.0.3.</span> <span class="nav-text">调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证-SSL-自签名证书"><span class="nav-number">3.0.4.</span> <span class="nav-text">验证 SSL 自签名证书</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
